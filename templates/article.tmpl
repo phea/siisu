@@ -1,0 +1,104 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>Siisu - {{.Title}}</title>
+	<link href="http://fonts.googleapis.com/css?family=Lora:700|Ubuntu:400,500|Source+Code+Pro:500" rel="stylesheet" type="text/css">
+	<link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="http://kizu.ecko.me/assets/css/normalize.css?v=bdff0d53b0">
+	<link rel="stylesheet" href="/assets/style.css">
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="/assets/moment.js"></script>
+</head>
+<body>
+	<header>
+		<div class="wrapper">
+			<h1>
+				<a href="http://www.siisu.com">Siisu</a>    
+			</h1>
+			<div class="bannernav">
+				<i class="icon-reorder"></i>
+				<ul>
+					<li><a href="/articles">Archive</a></li>
+					<li><a href="/about">About</a></li>
+					<li><a href="/about">Contact</a></li>
+				</ul>
+			</div>
+		</div>
+	</header>
+	<div class="posthead post">
+		<div class="wrapper">
+			<h1><a href="#">{{.Title}}</a></h1>
+			<div class="info"><time datetime="{{.Date}}"><span id="then" data-date="{{.Date}}"></span></time></div>
+			
+		</div>
+		<div id="postimage"></div>
+	</div>
+	<div class="postbody">
+		<div class="wrapper">
+			<div class="postmargin"></div>
+			{{.Body}}
+		</div>
+	</div>
+
+	<div class="profile postpage">
+	<div class="wrapper">
+		<a id="author"></a>
+		<div class="author">
+			<a href="http://siisu.com" class="overlay"><i class="icon-link icon-2x"></i></a>
+			<img src="http://kizu.ecko.me/content/images/2013/Oct/avatar-1.png" alt="profile"/>
+		</div>
+		<div class="info">
+			<strong>AUTHOR</strong>
+			<h4>Phea Duch</h4>
+			<p>No nisl oporteat reprehendunt vel, sale modus consectetuer cu nam, iudico deterruisset in eos. Noluisse euripidis vim te. Sonet tantas intellegam vix ne.</p>
+			<ul class="social">
+				<li><a href="http://twitter.com/" class="twitter" target="_blank"><i class="icon-twitter"></i></a></li>
+				<li><a href="http://facebook.com/" class="facebook" target="_blank"><i class="icon-facebook"></i></a></li>
+				<li><a href="http://plus.google.com/" class="googleplus" target="_blank"><i class="icon-google-plus"></i></a></li>
+				<li><a href="http://linkedin.com/" class="linkedin" target="_blank"><i class="icon-linkedin"></i></a></li>
+				<li><a href="http://github.com/" class="github" target="_blank"><i class="icon-github-alt"></i></a></li>
+				<li><a href="http://kizu.ecko.me/rss" class="rss" target="_blank"><i class="icon-rss"></i></a></li>
+			</ul>
+		</div>
+	</div>
+	</div>
+	
+	<footer class="wrapper">
+		<div class="bottomnav">
+			<a href="/about">About</a> &bull;
+			<a href="/contact">Contact</a>
+		</div>
+		© 2014 <a href="http://siisu.com">Phea Duch</a> • Licensed under <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons</a>.
+		<span class="ghost">Get the code that powers this blog at <a href="http://github.com">Github</a>.</span>
+	</footer>
+
+	<script>
+	  $(document).ready(function(){
+		var then = $('#then'),
+			date = moment(new Date(then.attr('data-date'))),
+			update = function(){
+					   then.html(date.fromNow());
+					 };
+		update();
+		setInterval(update, 60000);
+	  });
+
+	  $(document).ready(function(){
+	
+  
+  // PRETTIFY PRE TAGS
+  var prettify = false;
+  $("pre code").parent().each(function() {
+      $(this).addClass('prettyprint');
+      prettify = true;
+  });
+  if(prettify == true){
+    $.getScript("https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js");
+  }
+
+});
+	</script>
+	<link rel="stylesheet" href="http://kizu.ecko.me/assets/css/prettify.css">
+</body>
+</html>
