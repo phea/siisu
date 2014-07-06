@@ -16,6 +16,7 @@ var blog Blog
 var articles []Article
 
 func main() {
+	blog.Pages = make(map[string]string)
 	// load articles in ./articles directory
 	articles = AllArticles()
 
@@ -26,12 +27,12 @@ func main() {
 		data["Date"] = a.Date
 		data["Body"] = string(a.Body)
 
-		t, err := template.New(a.Slug).ParseFiles("templates/about.tmpl")
+		t, err := template.ParseFiles("templates/article.tmpl")
 		if err != nil {
 			panic(err)
 		}
 
-		err = t.ExecuteTemplate(&buf, "templates/about.tmpl", data)
+		err = t.Execute(&buf, data)
 		if err != nil {
 			panic(err)
 		}

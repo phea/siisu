@@ -14,6 +14,8 @@ func StartServer(blog *Blog) {
 	goji.Get("/articles", AllArticlesHandler)
 	goji.Get("/article/:id", ArticleHandler)
 	goji.Get("/:page", PageHandler)
+
+	goji.Get("/assets/*", http.FileServer(http.Dir("public")))
 	goji.NotFound(NotFoundHandler)
 
 	// Start Goji
