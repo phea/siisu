@@ -37,7 +37,6 @@ func main() {
 			panic(err)
 		}
 
-		log.Println(buf.String())
 		blog.Pages[a.Slug] = buf.String()
 	}
 
@@ -60,13 +59,8 @@ func main() {
 
 func createSitemap() []byte {
 	sitemap := []byte("http://siisu.com\n")
-	for _, page := range blog.Pages {
-		url := "http://siisu.com/" + page + "\n"
-		sitemap = append(sitemap, []byte(url)...)
-	}
-
-	for _, article := range articles {
-		url := "http://siisu.com/" + article.Slug + "\n"
+	for k, _ := range blog.Pages {
+		url := "http://siisu.com/" + k + "\n"
 		sitemap = append(sitemap, []byte(url)...)
 	}
 
