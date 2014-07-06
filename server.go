@@ -1,54 +1,57 @@
 package main
 
 import (
-	"github.com/go-martini/martini"
-	"github.com/martini-contrib/render"
+	"io"
+	"net/http"
+
+	"github.com/zenazn/goji"
+	"github.com/zenazn/goji/web"
 )
 
 func StartServer(blog *Blog) {
-	
-
-	m := martini.Classic()
-
-	// Setup middleware
-	m.Use(render.Renderer())
-	m.Use(martini.Static("assets"))
-	
 	// Routes
-	m.Get("/", IndexHandler)
-	m.Get("/articles", AllArticlesHandler)
-	m.Get("/article/:id", ArticleHandler)
-	m.Get("/:page", PageHandler)
-	m.NotFound(NotFoundHandler)
-	// Start Martini
-	m.Run()
+	goji.Get("/", IndexHandler)
+	goji.Get("/articles", AllArticlesHandler)
+	goji.Get("/article/:id", ArticleHandler)
+	goji.Get("/:page", PageHandler)
+	goji.NotFound(NotFoundHandler)
+
+	// Start Goji
+	goji.Serve()
 }
 
 // Handlers
-func IndexHandler(r render.Render) {
-	r.HTML(200, "index", blog.NewestArticle)
+func IndexHandler(c web.C, w http.ResponseWriter, r *http.Request) {
+	io.WriteString(w, blog.Pages["index"])
 }
 
-func NotFoundHandler(r render.Render) {
-	r.HTML(404, "404", "")
+func NotFoundHandler(c web.C, w http.ResponseWriter, r *http.Request) {
+	http.Error(w, blog.Pages["404"], 404)
 }
 
-func AllArticlesHandler(r render.Render) {
-	r.HTML(200, "archive", articles)
+func AllArticlesHandler(c web.C, w http.ResponseWriter, r *http.Request) {
+	io.WriteString(w, blog.Pages["archive"])
 }
 
-func ArticleHandler(params martini.Params, r render.Render) {
-	a := GetArticle(params["id"])
-	r.HTML(200, "article", a)
-}
-
-// PageHandler checks whether a page exists, if not it will serve a 404.
-func PageHandler(params martini.Params, r render.Render) {
-	page := params["page"]
-	for _, p := range blog.Pages {
-		if page == p {
-			r.HTML(200, page, "")
-		}
+func ArticleHandler(c web.C, w http.ResponseWriter, r *http.Request) {
+	id := c.URLParams["id"]
+	article, ok := blog.Pages[id]
+	if !ok {
+		http.Error(w, blog.Pages["404"], 404)
+		return
 	}
-	r.HTML(404, "404", "")
+
+	io.WriteString(w, article)
+}
+
+// PageHandler serves pages other than articles, ie home, about.
+func PageHandler(c web.C, w http.ResponseWriter, r *http.Request) {
+	p := c.URLParams["page"]
+	page, ok := blog.Pages[p]
+	if !ok {
+		http.Error(w, blog.Pages["404"], 404)
+		return
+	}
+
+	io.WriteString(w, page)
 }

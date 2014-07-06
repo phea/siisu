@@ -34,12 +34,6 @@ func AllArticles() []Article {
 	return articles
 }
 
-// GetArticle retrieves an individual article by slug name.
-func GetArticle(slug string) Article {
-	a := blog.Articles[slug]
-	return a
-}
-
 // parseArticle parses a .md file and returns an Article object.
 // Date and Slug are taken from the filename, Date is in YYYY-MM-DD format.
 // Title is the first line and Body is the rest.

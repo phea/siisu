@@ -1,17 +1,17 @@
 package main
 
 import (
+	"bytes"
+	"html/template"
 	"io/ioutil"
 	"log"
 )
 
 type Blog struct {
-	Articles      map[string]Article
-	Pages         []string
-	NewestArticle Article // this should probably be a function.
+	// Blog holds the pre-processed pages
+	Pages map[string]string
 }
 
-// Global blog variable, pretty smelly.
 var blog Blog
 var articles []Article
 
@@ -19,14 +19,33 @@ func main() {
 	// load articles in ./articles directory
 	articles = AllArticles()
 
-	// init the blog struct
-	blog.Articles = make(map[string]Article)
-	blog.NewestArticle = articles[len(articles)-1]
-	// in a perfect world this will walk through the templates folder.
-	blog.Pages = []string{"about"}
 	for _, a := range articles {
-		blog.Articles[a.Slug] = a
+		var buf bytes.Buffer
+		data := make(map[string]string)
+		data["Title"] = a.Title
+		data["Date"] = a.Date
+		data["Body"] = string(a.Body)
+
+		t, err := template.New(a.Slug).ParseFiles("templates/about.tmpl")
+		if err != nil {
+			panic(err)
+		}
+
+		err = t.ExecuteTemplate(&buf, "templates/about.tmpl", data)
+		if err != nil {
+			panic(err)
+		}
+
+		log.Println(buf.String())
+		blog.Pages[a.Slug] = buf.String()
 	}
+
+	// Find last article to display for index page
+	latest := articles[len(articles)-1]
+	blog.Pages["index"] = blog.Pages[latest.Slug]
+
+	// Load pages
+	blog.Pages["about"] = "About" // TODO: read the about.tmpl
 
 	// create sitemap.xml
 	err := writeSitemap(createSitemap())
