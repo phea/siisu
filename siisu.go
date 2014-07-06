@@ -20,12 +20,13 @@ func main() {
 	// load articles in ./articles directory
 	articles = AllArticles()
 
+	// Preprocess templates.
+	data := make(map[string]interface{})
 	for _, a := range articles {
 		var buf bytes.Buffer
-		data := make(map[string]string)
 		data["Title"] = a.Title
 		data["Date"] = a.Date
-		data["Body"] = string(a.Body)
+		data["Body"] = a.Body
 
 		t, err := template.ParseFiles("templates/article.tmpl")
 		if err != nil {
